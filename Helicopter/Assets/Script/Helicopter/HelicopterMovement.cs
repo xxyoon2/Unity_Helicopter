@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class HelicopterMovement : MonoBehaviour
 {
+    //public GameObject Propeller;
     enum Mode { FALL = -1, STAY, RISE };
     Mode moveMode = Mode.STAY;
-    float speed = 0.0f;
+    public float speed = 0.001f;
     public Rigidbody HelicopterRigidbody;
 
     void Start()
@@ -16,6 +17,7 @@ public class HelicopterMovement : MonoBehaviour
 
     void Update()
     {
+        // 키에 따른 모드 - 상승 / 유지 / 하강
         if (Input.GetKey(KeyCode.W) == true)
             moveMode = Mode.RISE;
         if (Input.GetKey(KeyCode.S) == true)
@@ -26,6 +28,9 @@ public class HelicopterMovement : MonoBehaviour
         switch (moveMode)
         {
         case Mode.FALL:
+            if (speed > 0.5f)
+                speed -= 0.001f;
+            
             HelicopterRigidbody.AddForce(0, -speed, 0);
             break;
 
@@ -35,8 +40,10 @@ public class HelicopterMovement : MonoBehaviour
         case Mode.RISE:
             HelicopterRigidbody.AddForce(0, speed, 0);
 
-            if (speed < 1.0f)
+            if (speed < 3.0f)
                 speed += 0.001f;
+            else 
+                moveMode = Mode.FALL;
             
             break;
         }
